@@ -37,7 +37,7 @@ public class UserControllerTest {
 
     @Test
     public void whenQuerySuccess() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/user")
+       String result= mvc.perform(MockMvcRequestBuilders.get("/user")
                 .param("name", "Coco")
                 .param("age", "18")
                 .param("ageTo", "25")
@@ -46,16 +46,23 @@ public class UserControllerTest {
                 .param("size", "2")
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(3));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(3))
+                .andReturn().getResponse().getContentAsString();
+
+       System.out.println("-------------whenQuerySuccess--:"+result);
     }
 
 
     @Test
     public void whenGetUserInfSuccess() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/user/1")
+        String result=mvc.perform(MockMvcRequestBuilders.get("/user/1")
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("tom"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("tom"))
+                .andReturn().getResponse().getContentAsString();
+
+        System.out.println("-------------whenGetUserInfSuccess--:"+result);
+
     }
 
     @Test
