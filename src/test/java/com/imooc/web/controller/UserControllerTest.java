@@ -65,4 +65,14 @@ public class UserControllerTest {
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
     }
 
+    @Test
+    public void whenCreateSuccess() throws Exception {
+        String content = "";
+        mvc.perform(MockMvcRequestBuilders.post("/user")
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1));
+
+    }
+
 }
