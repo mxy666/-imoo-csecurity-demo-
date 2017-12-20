@@ -2,10 +2,11 @@ package com.imooc.web.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.imooc.dto.User;
-import com.imooc.dto.UserQueryCondition;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.print.Pageable;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,12 +16,54 @@ import java.util.List;
 
 
 @RestController
+@RequestMapping("/user")
 public class UserController {
 
-    @GetMapping("/user")
+
+    @DeleteMapping("/{id:\\d+}")
+    public void delete(@PathVariable int id) {
+        System.out.println("delete :" + id);
+    }
+
+    @PostMapping
+    public User create(@Valid @RequestBody User user, BindingResult errors) {
+        if (errors.hasErrors()) {
+            errors.getAllErrors().stream().forEach(error -> System.out.println(error.getDefaultMessage()));
+
+        }
+        System.out.println("-------user===");
+        System.out.println(user.getId());
+        System.out.println(user.getName());
+        System.out.println(user.getPassWord());
+        System.out.println(user.getBirthday());
+        user.setId(1);
+        return user;
+    }
+
+
+    @PutMapping("/{id:\\d+}")
+    public User update(@Valid @RequestBody User user, BindingResult errors) {
+        if (errors.hasErrors()) {
+            errors.getAllErrors().stream().forEach(error -> {
+//                            FieldError fieldError=(FieldError)error;
+//                            String meaasge=fieldError.getField()+"-->"+error.getDefaultMessage();
+                System.out.println(error.getDefaultMessage());
+            });
+
+        }
+        System.out.println("-------user===");
+        System.out.println(user.getId());
+        System.out.println(user.getName());
+        System.out.println(user.getPassWord());
+        System.out.println(user.getBirthday());
+        user.setId(1);
+        return user;
+    }
+
+    @GetMapping
     @JsonView(User.UserSimpleView.class)
-    public List<User> query(@RequestParam(name = "nickName",required = false,defaultValue = "tom") String name){
-   // public List<User> query(UserQueryCondition condition, Pageable pageable) {
+    public List<User> query(@RequestParam(name = "nickName", required = false, defaultValue = "tom") String name) {
+        // public List<User> query(UserQueryCondition condition, Pageable pageable) {
         System.out.println(name);
         List<User> users = new ArrayList<>();
         users.add(new User());
@@ -29,7 +72,7 @@ public class UserController {
         return users;
     }
 
-    @GetMapping("/user/{id:\\d+}")
+    @GetMapping("/{id:\\d+}")
     @JsonView(User.UserDetailView.class)
     public User getInfo(@PathVariable String id) {
         User user = new User();

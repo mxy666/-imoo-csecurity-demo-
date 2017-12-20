@@ -6,14 +6,16 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 
 /**
  * create by mxy on 2017/12/18
@@ -37,7 +39,7 @@ public class UserControllerTest {
 
     @Test
     public void whenQuerySuccess() throws Exception {
-       String result= mvc.perform(MockMvcRequestBuilders.get("/user")
+        String result = mvc.perform(MockMvcRequestBuilders.get("/user")
                 .param("name", "Coco")
                 .param("age", "18")
                 .param("ageTo", "25")
@@ -49,19 +51,19 @@ public class UserControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(3))
                 .andReturn().getResponse().getContentAsString();
 
-       System.out.println("-------------whenQuerySuccess--:"+result);
+        System.out.println("-------------whenQuerySuccess--:" + result);
     }
 
 
     @Test
     public void whenGetUserInfSuccess() throws Exception {
-        String result=mvc.perform(MockMvcRequestBuilders.get("/user/1")
+        String result = mvc.perform(MockMvcRequestBuilders.get("/user/1")
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("tom"))
                 .andReturn().getResponse().getContentAsString();
 
-        System.out.println("-------------whenGetUserInfSuccess--:"+result);
+        System.out.println("-------------whenGetUserInfSuccess--:" + result);
 
     }
 
@@ -74,12 +76,43 @@ public class UserControllerTest {
 
     @Test
     public void whenCreateSuccess() throws Exception {
-        String content = "";
-        mvc.perform(MockMvcRequestBuilders.post("/user")
-                .contentType(MediaType.APPLICATION_JSON_UTF8))
+        Date date = new Date();
+        String content = "{\"name\":\"tom\",\"passWord\":null,\"birthday\":" + date.getTime() + "}";
+        System.out.println(date.getTime());
+        String result = mvc.perform(MockMvcRequestBuilders.post("/user")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(content))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
+                .andReturn().getResponse().getContentAsString();
+
+        System.out.println(result);
 
     }
 
+
+    @Test
+    public void whenUpdateSuccess() throws Exception {
+        Date date = new Date(LocalDateTime.now().plusYears(50).atZone(ZoneId.systemDefault()).toInstant().getEpochSecond());
+        String content = "{\"id\":1,\"name\":\"tom\",\"passWord\":null,\"birthday\":" + date.getTime() + "}";
+        System.out.println(date.getTime());
+        String result = mvc.perform(MockMvcRequestBuilders.put("/user/1")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(content))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
+                .andReturn().getResponse().getContentAsString();
+
+        System.out.println(result);
+
+    }
+
+
+    @Test
+    public void whenDeltetuccess() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.delete("/user/1")
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+    }
 }
