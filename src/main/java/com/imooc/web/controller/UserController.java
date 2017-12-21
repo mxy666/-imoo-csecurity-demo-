@@ -2,6 +2,7 @@ package com.imooc.web.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.imooc.dto.User;
+import com.imooc.exception.UserNotExistException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -75,9 +76,10 @@ public class UserController {
     @GetMapping("/{id:\\d+}")
     @JsonView(User.UserDetailView.class)
     public User getInfo(@PathVariable String id) {
-        User user = new User();
+       /* User user = new User();
         user.setName("tom");
-        return user;
+        return user;*/
+       throw new UserNotExistException(id);
 
     }
 
