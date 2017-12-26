@@ -3,6 +3,8 @@ package com.imooc.web.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.imooc.dto.User;
 import com.imooc.exception.UserNotExistException;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -63,6 +65,7 @@ public class UserController {
 
     @GetMapping
     @JsonView(User.UserSimpleView.class)
+    @ApiOperation(value = "用户查询服务")
     public List<User> query(@RequestParam(name = "nickName", required = false, defaultValue = "tom") String name) {
         // public List<User> query(UserQueryCondition condition, Pageable pageable) {
         System.out.println(name);
@@ -75,7 +78,7 @@ public class UserController {
 
     @GetMapping("/{id:\\d+}")
     @JsonView(User.UserDetailView.class)
-    public User getInfo(@PathVariable String id) {
+    public User getInfo(@ApiParam(value = "用户id") @PathVariable String id) {
         System.out.println("进入getInfo服务");
 
         User user = new User();
