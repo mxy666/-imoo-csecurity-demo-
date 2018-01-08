@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * create by mxy on 2017/12/21
  */
-@Configuration
+//@Configuration
 public class WebConfig extends WebMvcConfigurerAdapter {
     @Autowired
     TimeInterceptor timeInterceptor;
@@ -24,12 +24,12 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     //注册一个interceptor
     @Override
     public void addInterceptors(InterceptorRegistry interceptorRegistry) {
-        interceptorRegistry.addInterceptor(timeInterceptor);
+        // interceptorRegistry.addInterceptor(timeInterceptor);
 
     }
 
     //注册送一个filterBean
-    @Bean
+    //   @Bean
     public FilterRegistrationBean timeFilter() {
         FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
         TimeFilter timeFilter = new TimeFilter();
